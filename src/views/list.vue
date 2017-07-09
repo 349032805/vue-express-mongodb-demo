@@ -14,27 +14,10 @@
  				<td>
  					<button type="button" class="btn btn-info">查看</button>
  					<button type="button" class="btn btn-info">修改</button>
- 					<button type="button" class="btn btn-info">删除</button>
+ 					<button type="button" class="btn btn-danger">删除</button>
  				</td>
  			</tr>
- 			<tr>
- 				<td>夜曲</td>
- 				<td>周杰伦</td>
- 				<td>
- 					<button type="button" class="btn btn-info">查看</button>
- 					<button type="button" class="btn btn-info">修改</button>
- 					<button type="button" class="btn btn-info">删除</button>
- 				</td>
- 			</tr>
- 			<tr>
- 				<td>夜曲</td>
- 				<td>周杰伦</td>
- 				<td>
- 					<button type="button" class="btn btn-info">查看</button>
- 					<button type="button" class="btn btn-info">修改</button>
- 					<button type="button" class="btn btn-info">删除</button>
- 				</td>
- 			</tr>
+ 			
  		</tbody>
  	</table>
 
