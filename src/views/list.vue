@@ -5,22 +5,17 @@
  		<thead>
  			<th>歌曲</th>
  			<th>歌手</th>
+ 			<th>创建时间</th>
+ 			<th>更新时间</th>
  			<th>操作</th>
  		</thead>
  		<tbody>
- 			<!-- <tr>
- 				<td>夜曲</td>
- 				<td>周杰伦</td>
- 				<td>
- 					<button type="button" class="btn btn-info">查看</button>
- 					<button type="button" class="btn btn-info">修改</button>
- 					<button type="button" class="btn btn-danger">删除</button>
- 				</td>
- 			</tr> -->
 
  			<tr v-for="song of songs">
  				<td>{{song.song_name}}</td>
  				<td>{{song.singer}}</td>
+ 				<td>{{song.create_at | formatDate}}</td>
+ 				<td>{{song.update_at | formatDate}}</td>
  				<td>
  					<button type="button" class="btn btn-info" @click="showDetail(song)">查看</button>
  					<button type="button" class="btn btn-info" @click="edit(song)">修改</button>
@@ -34,15 +29,15 @@
  		<span class='glyphicon glyphicon-plus-sign' @click="addSong()"></span>
  	</div>
 
- 	 <!-- 添加歌曲模态框 -->
+ 	 <!-- 添加/修改歌曲模态框 -->
  	 <div class="bg-layer" v-show="showModal"></div>
  	 <div class="add-modal"  v-show="showModal">
- 	 	<div class="modal-title">添加歌曲</div>
+ 	 	<div class="modal-title">{{mode==0?'添加':'修改'}}歌曲</div>
  	 	<form class="form-group form-horizontal song-form" role="form">
 			<div class="form-group">
 			    <label class="col-xs-3 col-md-3 control-label">歌曲名:</label>
 			    <div class="col-xs-7 col-md-7">
-			      <input class="form-control" type="text" placeholder="歌曲名" maxlength="20" v-model="song.song_name">
+			      <input class="form-control" type="text" placeholder="歌曲名" maxlength="20" v-model="song_name">
 			    </div>
 			    <span class="col-xs-1 col-md-1 require">*</span>
 			</div>
@@ -50,14 +45,14 @@
 			<div class="form-group">
 			    <label class="col-xs-3 col-md-3 control-label">歌手:</label>
 			    <div class="col-xs-7 col-md-7">
-			      <input class="form-control" type="text" placeholder="歌手" maxlength="4" v-model="song.singer">
+			      <input class="form-control" type="text" placeholder="歌手" maxlength="4" v-model="singer">
 			    </div>
 			</div>
 	  	</form>
 
 	  	<div class="opt">
 	  		<button type="button" class="btn btn-default float-left" @click="closeModal()">取消</button>
-	  		<button type="button" class="btn btn-success float-right" @click="sureAdd()">确定</button>
+	  		<button type="button" class="btn btn-success float-right" @click="sureAddOrEdit()">确定</button>
 	  	</div>
 
  	 </div>
@@ -65,10 +60,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+     import {formatDate} from '../../utils/date.js';
      export default {
       data() {
           return {
-          	song:{},
+          	mode: 0,
+          	songId: "",
+          	song_name: "",
+          	singer: "",
           	songs: [],
           	showModal: false
           }
@@ -80,26 +79,18 @@
       methods: {
       	addSong(){
       		this.showModal = true;
+      		this.mode = 0;
       	},
       	closeModal(){
       		this.showModal = false;
       		this.song = {};
       	},
-      	sureAdd(){
-    		  this.$http.post('/api/addSong', {
-	          song_name: this.song.song_name,
-	          singer: this.song.singer
-	        })
-	        .then(res => {
-	          console.log('添加歌曲成功');
-	          this.song  = {};
-	          this.showModal = false;
-	          this._getSongs();
-	        })
-	        .catch(e => {
-	          console.log('保存失败');
-	          console.log(e)
-	        })
+      	sureAddOrEdit(){
+    			if(this.mode == 0){
+    				this._sureAdd();
+    			}else{
+    				this._sureEdit();
+    			}
       	},
           showDetail(song){
           	let songId = song._id;
@@ -107,7 +98,11 @@
           	this.$router.push(`/api/movie/${songId}`)
           },
           edit(song){
-
+          	this.showModal = true;
+          	this.mode = 1;
+          	this.songId = song._id;
+          	this.song_name = song.song_name;
+          	this.singer = song.singer;
           },
           deleteSong(song){
           	let songId = song._id;
@@ -128,8 +123,49 @@
 	        .catch(err => {
 	          console.log(err)
 	        })
+          },
+          _sureAdd(){
+          	  this.$http.post('/api/addSong', {
+	          song_name: this.song_name,
+	          singer: this.singer,
+	          create_at: new Date().getTime(),
+	          update_at: new Date().getTime()
+	        })
+	        .then(res => {
+	          console.log('添加歌曲成功');
+	          this.song_name  = "";
+	          this.singer = "";
+	          this.showModal = false;
+	          this._getSongs();
+	        })
+	        .catch(e => {
+	          console.log('保存失败');
+	          console.log(e)
+	        })
+          },
+          _sureEdit(){
+          	let id = this.songId;
+          	this.$http.put(`/api/updateSong/${id}`, {
+	          song_name: this.song_name,
+	          singer: this.singer,
+	          update_at: new Date().getTime()
+	        })
+	        .then(res => {
+    		    console.log('修改歌曲成功');
+                this.song_name  = "";
+	          this.singer = "";
+	          this.showModal = false;
+	          this._getSongs();
+	        })
+	        .catch(err => console.log(err))
           }
-      }  
+      },
+      filters: {
+	      formatDate(time) {
+	        let date = new Date(time);
+	        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+	      }
+      }
     };
 </script>
 

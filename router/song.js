@@ -47,10 +47,11 @@ router.post('/addSong', (req, res) => {
   // })
 })
 //更新一首歌曲
-router.put('/song/:id',(req,res) => {
-  Movie.findOneAndUpdate({ _id : req.params.id}
+router.put('/updateSong/:id',(req,res) => {
+  Song.findOneAndUpdate({ _id : req.params.id}
        ,{ $set : { song_name: req.body.song_name,
-         singer : req.body.singer }
+         singer : req.body.singer,
+         update_at: req.body.update_at}
          },{
            new : true
          })
@@ -58,8 +59,8 @@ router.put('/song/:id',(req,res) => {
        .catch(err => res.json(err))
 })
 //删除一首歌曲
-router.delete('/song/:id',(req,res) => {
-  Movie.findOneAndRemove({
+router.delete('/deleteSong/:id',(req,res) => {
+  Song.findOneAndRemove({
         _id : req.params.id
         })
        .then(song => res.send(`${song.song_name}删除成功`))
