@@ -83,7 +83,8 @@
       	},
       	closeModal(){
       		this.showModal = false;
-      		this.song = {};
+      		this.song_name = "";
+      		this.singer = "";
       	},
       	sureAddOrEdit(){
     			if(this.mode == 0){
@@ -94,8 +95,7 @@
       	},
           showDetail(song){
           	let songId = song._id;
-          	alert(songId);
-          	this.$router.push(`/api/movie/${songId}`)
+          	this.$router.push(`/api/songDetail/${songId}`)
           },
           edit(song){
           	this.showModal = true;
