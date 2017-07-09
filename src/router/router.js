@@ -1,24 +1,24 @@
 
-import test from '../views/test.vue'
-import list from '../views/list.vue'
-import detail from '../views/detail.vue'
+import test from '../views/test.vue';
+import list from '../views/list.vue';
+import detail from '../views/detail.vue';
 export default [
     {
       path: '/',
       component: list
     },
      {
-        path: 'test',
+        path: '/test',
         name: "test",
         component: test
       },
      {
-        path: 'list',
+        path: '/list',
         name: "list",
         component: list
       },
      {
-        path: 'detail',
+        path: '/detail/:songId',
         name: "detail",
         component: detail
       }

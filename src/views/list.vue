@@ -95,7 +95,7 @@
       	},
           showDetail(song){
           	let songId = song._id;
-          	this.$router.push(`/api/songDetail/${songId}`)
+          	this.$router.push({name:'detail',params:{songId:songId}});
           },
           edit(song){
           	this.showModal = true;
@@ -105,9 +105,8 @@
           	this.singer = song.singer;
           },
           deleteSong(song){
-          	let songId = song._id;
-          	alert(songId);
-	      this.$http.delete(`/api/movie/${songId}`)
+          	let id = song._id;
+	      this.$http.delete(`/api/deleteSong/${id}`)
 	        .then(res => {
 	          console.log(res.data)
 	          this._getSongs();
@@ -125,6 +124,10 @@
 	        })
           },
           _sureAdd(){
+          	 if(this.song_name == ""){
+          	 	alert("请输入歌名!");
+          	 	return;
+          	 }
           	  this.$http.post('/api/addSong', {
 	          song_name: this.song_name,
 	          singer: this.singer,
@@ -144,6 +147,10 @@
 	        })
           },
           _sureEdit(){
+          	 if(this.song_name == ""){
+          	 	alert("请输入歌名!");
+          	 	return;
+          	 }
           	let id = this.songId;
           	this.$http.put(`/api/updateSong/${id}`, {
 	          song_name: this.song_name,
