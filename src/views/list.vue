@@ -22,9 +22,9 @@
  				<td>{{song.song_name}}</td>
  				<td>{{song.singer}}</td>
  				<td>
- 					<button type="button" class="btn btn-info" @click="showDetail(song._id)">查看</button>
+ 					<button type="button" class="btn btn-info" @click="showDetail(song)">查看</button>
  					<button type="button" class="btn btn-info" @click="edit(song)">修改</button>
- 					<button type="button" class="btn btn-danger" @click="delete(song._id)">删除</button>
+ 					<button type="button" class="btn btn-danger" @click="deleteSong(song)">删除</button>
  				</td>
  			</tr>
  		</tbody>
@@ -40,20 +40,41 @@
      export default {
       data() {
           return {
+          	songs: []
           }
         },
       created() {
           console.log("---------create");
+          this._getSongs();
        },
       methods: {
-          showDetail(songId){
+          showDetail(song){
+          	let songId = song._id;
           	alert(songId);
+          	this.$router.push(`/api/movie/${songId}`)
           },
           edit(song){
 
           },
-          delete(songId){
-          	alert(songId)
+          deleteSong(song){
+          	let songId = song._id;
+          	alert(songId);
+	      this.$http.delete(`/api/movie/${songId}`)
+	        .then(res => {
+	          console.log(res.data)
+	          this._getSongs();
+	        }).catch(e => console.log(e))
+          },
+          _getSongs(){
+          	console.log("获取歌曲列表");
+          	this.$http.get('/api/songList')
+	        .then(res => {
+	          console.dir(res.data)
+	          this.songs = res.data
+	        })
+	        .catch(err => {
+	          console.log(err)
+	        })
           }
       }  
     };
