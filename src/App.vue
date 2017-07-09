@@ -8,6 +8,7 @@
 <style lang="less" scoped>
 	body {
 		font-size: 16px;
+		color: #333;
 	}
 	#app{
 		width: 1200px;
