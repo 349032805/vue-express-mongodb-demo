@@ -8,7 +8,7 @@
  			<th>操作</th>
  		</thead>
  		<tbody>
- 			<tr>
+ 			<!-- <tr>
  				<td>夜曲</td>
  				<td>周杰伦</td>
  				<td>
@@ -16,8 +16,17 @@
  					<button type="button" class="btn btn-info">修改</button>
  					<button type="button" class="btn btn-danger">删除</button>
  				</td>
+ 			</tr> -->
+
+ 			<tr v-for="song of songs">
+ 				<td>{{song.song_name}}</td>
+ 				<td>{{song.singer}}</td>
+ 				<td>
+ 					<button type="button" class="btn btn-info" @click="showDetail(song._id)">查看</button>
+ 					<button type="button" class="btn btn-info" @click="edit(song)">修改</button>
+ 					<button type="button" class="btn btn-danger" @click="delete(song._id)">删除</button>
+ 				</td>
  			</tr>
- 			
  		</tbody>
  	</table>
 
@@ -37,7 +46,15 @@
           console.log("---------create");
        },
       methods: {
-          
+          showDetail(songId){
+          	alert(songId);
+          },
+          edit(song){
+
+          },
+          delete(songId){
+          	alert(songId)
+          }
       }  
     };
 </script>
